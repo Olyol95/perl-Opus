@@ -1,0 +1,10 @@
+TYPEMAP
+opus_int32   T_OPUS_INT32
+
+INPUT
+T_OPUS_INT32
+    $var = ($type)SvIV($arg)
+
+OUTPUT
+T_OPUS_INT32
+    sv_setiv($arg, (IV)$var);
