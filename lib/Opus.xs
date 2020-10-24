@@ -35,7 +35,7 @@ CODE:
     if (data_length < 0) {
         croak("error calling opus_encode_float: %i", data_length);
     }
-    RETVAL = newSVpv( (char*) data, data_length * 8);
+    RETVAL = newSVpv( (char*) data, data_length * sizeof(char));
 OUTPUT:
     RETVAL
 
@@ -50,3 +50,50 @@ CODE:
         *hv_fetchs( hash, "_ptr", FALSE )
     );
     opus_encoder_destroy(enc);
+
+
+MODULE = Opus PACKAGE = Opus::Decoder
+PROTOTYPES: ENABLE
+
+SV*
+_opus_decoder_create(opus_int32 sample_rate, int channels)
+PREINIT:
+    int error;
+    OpusDecoder* dec;
+CODE:
+    dec = opus_decoder_create(sample_rate, channels, &error);
+    if (error) {
+        croak("error calling opus_decoder_create: %i", error);
+    }
+    RETVAL = newSViv(PTR2IV(dec));
+OUTPUT:
+    RETVAL
+
+SV*
+_opus_decode_float(SV* dec_ptr, char* opus_pack, opus_int32 opus_length, int channels, int frame_size)
+PREINIT:
+    OpusDecoder* dec;
+    int samples;
+CODE:
+    float pcm[frame_size * channels * sizeof(float)];
+    const unsigned char* opus = (unsigned char*) opus_pack;
+    dec  = (OpusDecoder*) SvIV(dec_ptr);
+    samples = opus_decode_float(dec, opus, opus_length, pcm, frame_size, 0);
+    if (samples < 0) {
+        croak("error calling opus_decode_float: %i", samples);
+    }
+    RETVAL = newSVpv( (char*) pcm, samples * sizeof(float));
+OUTPUT:
+    RETVAL
+
+void
+DESTROY(SV* self)
+PREINIT:
+    OpusDecoder* dec;
+    HV* hash;
+CODE:
+    hash = (HV*) SvRV(self);
+    dec  = (OpusDecoder*) SvIV(
+        *hv_fetchs( hash, "_ptr", FALSE )
+    );
+    opus_decoder_destroy(dec);
