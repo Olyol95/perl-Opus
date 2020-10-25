@@ -12,7 +12,7 @@ Distribution:   fedora-31-x86_64, epel-8-x86_64
 Requires: opus
 
 BuildRequires: gcc perl opus-devel
-BuildRequires: perl(XSLoader)
+BuildRequires: perl(XSLoader) perl(Carp)
 BuildRequires: perl(ExtUtils::MakeMaker) perl(Test::More)
 BuildRequires: perl(Test::Exception) perl(Test::MemoryGrowth)
 
