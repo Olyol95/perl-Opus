@@ -13,7 +13,7 @@ WriteMakefile(
     },
     ABSTRACT_FROM  => 'lib/Opus.pm',
     AUTHOR         => 'Oliver Youle',
-    CCFLAGS        => '-Wall -std=c99',
+    CCFLAGS        => '-g -Wall -std=c99',
     LIBS           => ['-lopus'],
     OPTIMIZE       => '-O3',
     XSMULTI        => 1,
