@@ -43,6 +43,9 @@ make test
 %{perl_vendorarch}/Opus.pm
 %{perl_vendorarch}/auto/Opus/
 %{perl_vendorarch}/Opus/
+%{_mandir}/man3/Opus.3pm.gz
+%{_mandir}/man3/Opus::Decoder.3pm.gz
+%{_mandir}/man3/Opus::Encoder.3pm.gz
 
 %changelog
 * Sun Oct 25 2020 Oliver Youle <youle.oliver@gmail.com> - 1.0.0-1
