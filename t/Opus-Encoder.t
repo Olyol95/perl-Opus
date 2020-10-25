@@ -78,9 +78,33 @@ subtest 'new' => sub {
 };
 
 subtest 'encode' => sub {
-    plan tests => 1;
+    plan tests => 2;
 
     can_ok('Opus::Encoder', qw(encode));
+
+    open(my $pcm_in, '<:raw', 't/data/pcm.raw')
+        or die "Failed to open 't/data/pcm.raw': $!";
+
+    local $/;
+    my @pcm = unpack('f*', <$pcm_in>);
+
+    close($pcm_in);
+
+    open(my $opus_in, '<:raw', 't/data/encode.opus')
+        or die "Failed to open 't/data/encode.opus': $!";
+
+    my @expected = unpack('C*', <$opus_in>);
+
+    close($opus_in);
+
+    my $encoder = Opus::Encoder->new(
+        channels    => 2,
+        sample_rate => 48_000,
+    );
+
+    my @opus = $encoder->encode(\@pcm);
+
+    is_deeply(\@opus, \@expected, 'PCM data encoded correctly');
 };
 
 subtest 'destroy' => sub {
