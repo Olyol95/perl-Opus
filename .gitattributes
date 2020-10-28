@@ -1,0 +1,2 @@
+*.pl text diff=perl
+*.pm text diff=perl
